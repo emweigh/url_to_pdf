@@ -5,15 +5,15 @@ from bs4 import BeautifulSoup
 import os
 import re
 
-global numericNaming
+global numeric_naming
 
 
-def getFilename(title):
+def get_filename(title):
     filename = title.lower().replace(" ", "_").replace("/", "_").replace("|", "_")
     filename = re.sub(r'[^a-zA-Z0-9_\-]+', '', filename)
 
-    global numericNaming
-    if numericNaming:
+    global numeric_naming
+    if numeric_naming:
         filename = filename.zfill(4)
 
     # Check if file already exists
@@ -42,7 +42,7 @@ def save_pdf(url: str, filename: str = None):
         content = page.content()
         soup = BeautifulSoup(content, "html.parser")
         title = soup.title.string if soup.title else "untitled"
-        title = getFilename(filename if filename else title)
+        title = get_filename(filename if filename else title)
         output_path = f"{title}.pdf"
 
         page.pdf(path=output_path, format="A4")
@@ -52,7 +52,7 @@ def save_pdf(url: str, filename: str = None):
 
 if __name__ == "__main__":
     filename = None
-    numericNaming = False
+    numeric_naming = False
 
     if len(sys.argv) < 2:
         print("Usage: python url_to_pdf.py <url>")
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     index = 1
     if '-n' in sys.argv or '--numeric' in sys.argv:
-        numericNaming = True
+        numeric_naming = True
 
     if filename:
         if not os.path.isfile(filename):
@@ -82,7 +82,7 @@ if __name__ == "__main__":
             urls = f.readlines()
             for url in urls:
                 print(index, " - Downloading PDF from:", url)
-                save_pdf(url, str(index) if numericNaming else None)
+                save_pdf(url, str(index) if numeric_naming else None)
                 index += 1
         sys.exit(0)
 
@@ -92,5 +92,5 @@ if __name__ == "__main__":
             continue
 
         print(index, " - Downloading PDF from:", url)
-        save_pdf(url, filename=str(index) if numericNaming else None)
+        save_pdf(url, filename=str(index) if numeric_naming else None)
         index += 1
