@@ -12,6 +12,8 @@ pip install bs4
 
 ## Usage
 
+**NOTE: You might have to add `https://` to the start of the urls!**
+
 To download pages directly, run the script with urls as the arguments:
 
 ```bash
