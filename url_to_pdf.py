@@ -5,10 +5,10 @@ from bs4 import BeautifulSoup
 import os
 import re
 
-def getFilename(title):
-    filename = title.replace(" ", "_").replace("/", "_").replace("|", "_")
-    filename = re.sub(r'[^a-zA-Z_\-]+', '', filename)
 
+def getFilename(title):
+    filename = title.lower().replace(" ", "_").replace("/", "_").replace("|", "_")
+    filename = re.sub(r'[^a-zA-Z0-9_\-]+', '', filename)
 
     # Check if file already exists
     if os.path.isfile(filename):
@@ -21,7 +21,8 @@ def getFilename(title):
 
     return filename
 
-def save_pdf(url: str):
+
+def save_pdf(url: str, filename: str = None):
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page()
@@ -35,7 +36,7 @@ def save_pdf(url: str):
         content = page.content()
         soup = BeautifulSoup(content, "html.parser")
         title = soup.title.string if soup.title else "untitled"
-        title = getFilename(title)
+        title = getFilename(filename if filename else title)
         output_path = f"{title}.pdf"
 
         page.pdf(path=output_path, format="A4")
@@ -44,27 +45,43 @@ def save_pdf(url: str):
 
 
 if __name__ == "__main__":
+    filename = None
+    numericNaming = False
+
     if len(sys.argv) < 2:
         print("Usage: python url_to_pdf.py <url>")
         sys.exit(1)
 
-    if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+    if '-h' in sys.argv or '--help' in sys.argv:
         print("Usage: python url_to_pdf.py <url>")
         sys.exit(0)
 
-    if sys.argv[1] == "-f" or sys.argv[1] == "--file":
+    if '-f' in sys.argv or '--file' in sys.argv:
         if len(sys.argv) < 3:
             print("Usage: python url_to_pdf.py -f <file>")
             sys.exit(1)
 
-        with open(sys.argv[2], "r") as f:
+        filename=sys.argv[-1]
+
+    index = 1
+    if '-n' in sys.argv or '--numeric' in sys.argv:
+        numericNaming = True
+
+    if filename:
+        if not os.path.isfile(filename):
+            print("File not found: ", filename)
+            sys.exit(1)
+
+        with open(filename, "r") as f:
             urls = f.readlines()
             for url in urls:
-                print("Downloading PDF from:", url)
-                save_pdf(url)
+                print(index, " - Downloading PDF from:", url)
+                save_pdf(url, str(index) if numericNaming else None)
+                index += 1
         sys.exit(0)
 
     input_args = sys.argv[1:]
     for url in input_args:
-        print("Downloading PDF from:", url)
-        save_pdf(url)
+        print(index, " - Downloading PDF from:", url)
+        save_pdf(url, filename = str(index) if numericNaming else None)
+        index += 1
