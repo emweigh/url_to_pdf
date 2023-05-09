@@ -28,5 +28,7 @@ if __name__ == "__main__":
         print("Usage: python url_to_pdf.py <url>")
         sys.exit(1)
 
-    url = sys.argv[1]
-    save_pdf(url)
+    input_args = sys.argv[1:]
+    for url in input_args:
+        print("Downloading PDF from", arg)
+        save_pdf(url)
