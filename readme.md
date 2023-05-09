@@ -9,3 +9,25 @@ pip install playwright
 playwright install
 pip install bs4
 ```
+
+## Usage
+
+To download pages directly, run the script with urls as the arguments:
+
+```bash
+python download.py <url> <url> <url>...
+```
+
+### Downloading from urls in a file
+To download pages from a file, run the script with the file as the argument:
+
+```bash
+python download.py -f <file>
+```
+
+The file should contain one url per line.
+
+
+## Known issues
+
+There's a bug where Playwright will get stuck on `browser.new_page()` if you have `DISPLAY` environment variable set with no X Server running. Clear the `DISPLAY` environment variable to fix this.
