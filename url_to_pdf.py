@@ -5,10 +5,15 @@ from bs4 import BeautifulSoup
 import os
 import re
 
+global numericNaming
 
 def getFilename(title):
     filename = title.lower().replace(" ", "_").replace("/", "_").replace("|", "_")
     filename = re.sub(r'[^a-zA-Z0-9_\-]+', '', filename)
+
+    global numericNaming
+    if numericNaming:
+        filename = filename.zfill(4)
 
     # Check if file already exists
     if os.path.isfile(filename):
