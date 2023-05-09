@@ -2,7 +2,22 @@ import sys
 import asyncio
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
+import os
+import re
 
+def getFilename(title):
+    filename = title.replace(" ", "_").replace("/", "_").replace("|", "_")
+
+    # Check if file already exists
+    if os.path.isfile(filename):
+        match = re.search(r'(\d+)$', filename)
+        if match:
+            num = int(match.group(1))
+            filename = re.sub(r'\d+$', str(num + 1), filename)
+        else:
+            filename = filename + "_2"
+
+    return filename
 
 def save_pdf(url: str, output_file: str = 'file.pdf'):
     with sync_playwright() as p:
@@ -15,7 +30,7 @@ def save_pdf(url: str, output_file: str = 'file.pdf'):
         content = page.content()
         soup = BeautifulSoup(content, "html.parser")
         title = soup.title.string if soup.title else "untitled"
-        title = title.replace(" ", "_").replace("/", "_").replace("|", "_")
+        title = getFilename(title)
         output_path = f"{title}.pdf"
 
         page.pdf(path=output_path, format="A4")
@@ -30,5 +45,5 @@ if __name__ == "__main__":
 
     input_args = sys.argv[1:]
     for url in input_args:
-        print("Downloading PDF from", arg)
+        print("Downloading PDF from:", url)
         save_pdf(url)
