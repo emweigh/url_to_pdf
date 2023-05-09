@@ -21,7 +21,7 @@ def getFilename(title):
 
     return filename
 
-def save_pdf(url: str, output_file: str = 'file.pdf'):
+def save_pdf(url: str):
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page()
