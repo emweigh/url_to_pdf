@@ -7,6 +7,7 @@ import re
 
 global numericNaming
 
+
 def getFilename(title):
     filename = title.lower().replace(" ", "_").replace("/", "_").replace("|", "_")
     filename = re.sub(r'[^a-zA-Z0-9_\-]+', '', filename)
@@ -66,7 +67,7 @@ if __name__ == "__main__":
             print("Usage: python url_to_pdf.py -f <file>")
             sys.exit(1)
 
-        filename=sys.argv[-1]
+        filename = sys.argv[-1]
 
     index = 1
     if '-n' in sys.argv or '--numeric' in sys.argv:
@@ -91,5 +92,5 @@ if __name__ == "__main__":
             continue
 
         print(index, " - Downloading PDF from:", url)
-        save_pdf(url, filename = str(index) if numericNaming else None)
+        save_pdf(url, filename=str(index) if numericNaming else None)
         index += 1

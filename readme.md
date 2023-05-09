@@ -1,4 +1,4 @@
-This script will download the given urls as pdf files, using Microsoft Playwright (Chromium). 
+This script will download the given urls as pdf files, using Microsoft Playwright (Chromium).
 
 ## Installation
 
@@ -19,6 +19,7 @@ python download.py <url> <url> <url>...
 ```
 
 ### Downloading from urls in a file
+
 To download pages from a file, run the script with the file as the argument:
 
 ```bash
@@ -27,22 +28,35 @@ python download.py -f <file>
 
 The file should contain one url per line.
 
+### Downloading multiple files using numeric names
+
+Maybe you want to download a bunch of pages as pdfs, and then combine them into a single large pdf file (see tips for suggestions on how to combine them), so you can read a bunch of articles while you're stuck on a plane without internet.
+
+You can use the `-n` flag to specify that the script should save the urls using sequential numbers as the names. Ex. `0001.pdf`, `0002.pdf`, `0003.pdf` etc.
+
+```bash
+python download.py -n <url> <url> <url>...
+```
+
+Or
+
+```bash
+python download.py -n -f <file>
+```
 
 ## Known issues
 
 There's a bug where Playwright will get stuck on `browser.new_page()` if you have `DISPLAY` environment variable set with no X Server running. Clear the `DISPLAY` environment variable to fix this.
 
-
-
 ## Tips
 
-If you download multiple PDF-files, and want to combine them into one, you can use the `poppler-utils` package, which contains the `pdfunite`:
+If you download multiple PDF-files, and want to combine them into one, you can use the `poppler-utils` package, which contains the `pdfunite` tool:
 
 ```bash
 pdfunite *.pdf output.pdf
 ```
 
-Or if you're on macOS, you can use the built-in `sips` tool:
+Or if you're on macOS, you can use the built-in `sips` tool. Though my understanding is that sips is not specifically designed for combining PDFs, so there may be some limitations or issues with certain PDF files.
 
 ```bash
 sips -s format pdf *.pdf --out combined.pdf
