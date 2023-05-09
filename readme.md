@@ -2,12 +2,12 @@ This script will download the given urls as pdf files, using Microsoft Playwrigh
 
 ## Installation
 
-The script has a dependency on [Playwright](https://playwright.dev/) and BeautifulSoup4, which can be installed using pip:
+The script has a dependency on [Playwright](https://playwright.dev/) and [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/), which can be installed using pip:
 
 ```bash
 pip install playwright
 playwright install
-pip install bs4
+pip install beautifulsoup4
 ```
 
 ## Usage
