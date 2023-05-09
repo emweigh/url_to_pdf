@@ -82,6 +82,9 @@ if __name__ == "__main__":
 
     input_args = sys.argv[1:]
     for url in input_args:
+        if url.startswith('-'):
+            continue
+
         print(index, " - Downloading PDF from:", url)
         save_pdf(url, filename = str(index) if numericNaming else None)
         index += 1
