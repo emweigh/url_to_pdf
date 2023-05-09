@@ -43,6 +43,22 @@ if __name__ == "__main__":
         print("Usage: python url_to_pdf.py <url>")
         sys.exit(1)
 
+    if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+        print("Usage: python url_to_pdf.py <url>")
+        sys.exit(0)
+
+    if sys.argv[1] == "-f" or sys.argv[1] == "--file":
+        if len(sys.argv) < 3:
+            print("Usage: python url_to_pdf.py -f <file>")
+            sys.exit(1)
+
+        with open(sys.argv[2], "r") as f:
+            urls = f.readlines()
+            for url in urls:
+                print("Downloading PDF from:", url)
+                save_pdf(url)
+        sys.exit(0)
+
     input_args = sys.argv[1:]
     for url in input_args:
         print("Downloading PDF from:", url)
