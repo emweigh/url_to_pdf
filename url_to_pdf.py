@@ -26,6 +26,10 @@ def save_pdf(url: str, output_file: str = 'file.pdf'):
         page.goto(url)
         print(page.title())
 
+        # Remove fixed and sticky elements
+        page.evaluate('''() => {javascript:(function(){document.querySelectorAll("body *").forEach(function(node){if(["fixed","sticky"].includes(getComputedStyle(node).position)){node.parentNode.removeChild(node)}});document.querySelectorAll("html *").forEach(function(node){var s=getComputedStyle(node);if("hidden"===s["overflow"]){node.style["overflow"]="visible"}if("hidden"===s["overflow-x"]){node.style["overflow-x"]="visible"}if("hidden"===s["overflow-y"]){node.style["overflow-y"]="visible"}});var htmlNode=document.querySelector("html");htmlNode.style["overflow"]="visible";htmlNode.style["overflow-x"]="visible";htmlNode.style["overflow-y"]="visible"})();
+        }''')
+
         print("Saving PDF")
         content = page.content()
         soup = BeautifulSoup(content, "html.parser")
