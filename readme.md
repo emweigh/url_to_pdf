@@ -17,7 +17,7 @@ pip install bs4
 To download pages directly, run the script with urls as the arguments:
 
 ```bash
-python download.py <url> <url> <url>...
+python url_to_pdf.py <url> <url> <url>...
 ```
 
 ### Downloading from urls in a file
@@ -25,7 +25,7 @@ python download.py <url> <url> <url>...
 To download pages from a file, run the script with the file as the argument:
 
 ```bash
-python download.py -f <file>
+python url_to_pdf.py -f <file>
 ```
 
 The file should contain one url per line.
@@ -37,13 +37,13 @@ Maybe you want to download a bunch of pages as pdfs, and then combine them into 
 You can use the `-n` flag to specify that the script should save the urls using sequential numbers as the names. Ex. `0001.pdf`, `0002.pdf`, `0003.pdf` etc.
 
 ```bash
-python download.py -n <url> <url> <url>...
+python url_to_pdf.py -n <url> <url> <url>...
 ```
 
 Or
 
 ```bash
-python download.py -n -f <file>
+python url_to_pdf.py -n -f <file>
 ```
 
 ## Known issues
