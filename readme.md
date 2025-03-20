@@ -1,4 +1,4 @@
-Revisions from @emweigh:
+## Revisions from @emweigh:
 
 1. Rewrote argument handling to use argparse module
 2. Added argument/flag to run in headful mode
