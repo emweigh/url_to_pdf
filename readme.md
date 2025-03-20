@@ -2,7 +2,7 @@ Revisions from @emweigh:
 
 1. Rewrote argument handling to use argparse module
 2. Added argument/flag to run in headful mode
-3. Rewrite numeric naming so it includes actual filename, i.e. "NUM - ORIGINAL_FILENAME.pdf"
+3. Rewrote numeric naming so that it includes actual filename, i.e. "NUM - ORIGINAL_FILENAME.pdf"
 4. Added a text file with test URLs for generating PDFs
 
 Future ToDo:
