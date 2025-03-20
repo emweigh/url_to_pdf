@@ -12,8 +12,8 @@ TODO:
 2. Add argument/flag to run in headful mode
 3. Figure out a better way to generate and format PDFs.
 4. Rewrite numeric naming so it includes actual filename, i.e. "NUM - ORIGINAL_FILENAME.pdf"
-4. ?Optional? Check if webpage has print button; if so, use it to generate PDF instead
-
+5. ?Optional? Check if webpage has print button; if so, use it to generate PDF instead
+6. Evaluate Javascript for removing elements
 """
 
 
@@ -60,7 +60,7 @@ def save_pdf(url: str, filenum: str = None, run_headful: bool = False):
         browser.close()
         print(f"PDF saved as {output_path}")
 
-def main_loop():
+def main():
     filename = None
     global numeric_naming
     numeric_naming = False
@@ -99,4 +99,4 @@ def main_loop():
                 index += 1
         sys.exit(0)
 
-main_loop()
+main()
