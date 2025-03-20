@@ -4,17 +4,28 @@ from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 import os
 import re
+import argparse
+
+"""
+TODO:
+1. Rewrite argument handling use argparse module
+2. Add argument/flag to run in headful mode
+3. Figure out a better way to generate and format PDFs.
+4. Rewrite numeric naming so it includes actual filename, i.e. "NUM - ORIGINAL_FILENAME.pdf"
+4. ?Optional? Check if webpage has print button; if so, use it to generate PDF instead
+
+"""
+
 
 global numeric_naming
 
-
-def get_filename(title):
+def get_filename(title, filenum: str = None):
     filename = title.lower().replace(" ", "_").replace("/", "_").replace("|", "_")
     filename = re.sub(r'[^a-zA-Z0-9_\-]+', '', filename)
 
     global numeric_naming
     if numeric_naming:
-        filename = filename.zfill(4)
+        filename = filenum.zfill(4)+" - "+filename
 
     # Check if file already exists
     if os.path.isfile(filename):
@@ -28,9 +39,9 @@ def get_filename(title):
     return filename
 
 
-def save_pdf(url: str, filename: str = None):
+def save_pdf(url: str, filenum: str = None, run_headful: bool = False):
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = p.chromium.launch(headless=run_headful)
         page = browser.new_page()
         page.goto(url)
         print(page.title())
@@ -42,38 +53,40 @@ def save_pdf(url: str, filename: str = None):
         content = page.content()
         soup = BeautifulSoup(content, "html.parser")
         title = soup.title.string if soup.title else "untitled"
-        title = get_filename(filename if filename else title)
+        title = get_filename(title, filenum)
         output_path = f"{title}.pdf"
 
-        page.pdf(path=output_path, format="A4")
+        page.pdf(path=output_path, format="Letter")
         browser.close()
         print(f"PDF saved as {output_path}")
 
-
-if __name__ == "__main__":
+def main_loop():
     filename = None
+    global numeric_naming
     numeric_naming = False
+    
+    parser = argparse.ArgumentParser(prog="url_to_pdf",description="Save a webpage as a PDF!",epilog="And that's how can you save a batch of URLS as PDFs!")
+    parser.add_argument("url",help="Webpage/html you want to save as a PDF",nargs="*")
+    parser.add_argument("-f","--file",help="File containing list of URLs to download")
+    parser.add_argument("-n","--numeric",help="Number the PDFs that are saved",action="store_true")
+    parser.add_argument("-H","--headful",help="Run chromium in headful mode",action="store_false")
+    args = parser.parse_args()
 
-    if len(sys.argv) < 2:
-        print("Usage: python url_to_pdf.py <url>")
-        sys.exit(1)
+    index=1
+    numeric_naming=args.numeric
 
-    if '-h' in sys.argv or '--help' in sys.argv:
-        print("Usage: python url_to_pdf.py <url>")
-        sys.exit(0)
+    if args.url:
+        for url in args.url:
+            if url.startswith('-'):
+                continue
 
-    if '-f' in sys.argv or '--file' in sys.argv:
-        if len(sys.argv) < 3:
-            print("Usage: python url_to_pdf.py -f <file>")
-            sys.exit(1)
+            print(index, " - Downloading PDF from:", url)
+            save_pdf(url, filenum=str(index) if numeric_naming else None, run_headful=args.headful)
+            index += 1
 
-        filename = sys.argv[-1]
 
-    index = 1
-    if '-n' in sys.argv or '--numeric' in sys.argv:
-        numeric_naming = True
-
-    if filename:
+    if args.file:
+        filename = args.file
         if not os.path.isfile(filename):
             print("File not found: ", filename)
             sys.exit(1)
@@ -82,15 +95,8 @@ if __name__ == "__main__":
             urls = f.readlines()
             for url in urls:
                 print(index, " - Downloading PDF from:", url)
-                save_pdf(url, str(index) if numeric_naming else None)
+                save_pdf(url, str(index) if numeric_naming else None, run_headful=args.headful)
                 index += 1
         sys.exit(0)
 
-    input_args = sys.argv[1:]
-    for url in input_args:
-        if url.startswith('-'):
-            continue
-
-        print(index, " - Downloading PDF from:", url)
-        save_pdf(url, filename=str(index) if numeric_naming else None)
-        index += 1
+main_loop()
