@@ -70,7 +70,7 @@ def main():
     parser.add_argument("-f","--file",help="File containing list of URLs to download")
     parser.add_argument("-n","--numeric",help="Number the PDFs that are saved",action="store_true")
     parser.add_argument("-H","--headful",help="Run chromium in headful mode",action="store_false")
-    args = parser.parse_args()
+    args = parser.parse_args(args=None if sys.argv[1:] else ['--help'])
 
     index=1
     numeric_naming=args.numeric
