@@ -5,10 +5,11 @@
 3. Rewrote numeric naming so that it includes actual filename, i.e. "NUM - ORIGINAL_FILENAME.pdf"
 4. Added a text file with test URLs for generating PDFs
 
-Future ToDo:
+### Future ToDo:
 1. Create a better PDF generator with nicer formatting.
 2. [?] Evaluate if webpage has print button; if so, use it to generate PDF instead
 
+##
 
 This script will download the given urls as pdf files, using Microsoft Playwright (Chromium).
 
