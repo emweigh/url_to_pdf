@@ -6,9 +6,9 @@
 4. Added a text file with test URLs for generating PDFs
 
 ### Future ToDo:
-1. Implement a PDF generator with nicer formatting.
-2. [STRETCH] Evaluate if webpage has print button; if so, print document and save that as PDF
-3. [STRETCH] Evaluate if URL points to PDF or non-PDF/html (e.g. .DOCX); if so, save document as is instead of generating PDF
+- [ ] Implement a PDF generator with nicer formatting.
+- [ ] [STRETCH] Evaluate if webpage has print button; if so, print document and save that as PDF
+- [ ] [STRETCH] Evaluate if URL points to PDF or non-PDF/html (e.g. .DOCX); if so, save document as is instead of generating PDF
 
 ##
 
