@@ -37,30 +37,36 @@ def get_filename(title, filenum: str = None):
     return filename
 
 def check_url(url : str):
-	# Check if url already links to PDF, and if PDF, then download and save instead of print to PDF
-	return url.endswith((".PDF",".pdf"))
+    # Check if url already links to PDF, and if PDF, then download and save instead of print to PDF
+    return url.endswith((".PDF",".pdf"))
 
 def save_pdf(url: str, filenum: str = None, run_headful: bool = False):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=run_headful, slow_mo=5000)
-        page = browser.new_page()
+        browser = p.chromium.launch(headless=run_headful, slow_mo=5000, downloads_path=f'{os.getcwd()}')
+        page = browser.new_page(accept_downloads=True)
         page.goto(url)
         page.wait_for_load_state('load')
         print(page.title())
+        
+        if check_url(url):
+            with page.expect_download() as download_info:
+                page.get_by_text("Download").click()
+            download=download_info.value
+            download.save_as(os.getcwd()+download.suggested_filename)
+        else:
+            # Remove fixed and sticky elements
+            page.evaluate('''() => {document.querySelectorAll("body *").forEach(function(node){if(["fixed","sticky"].includes(getComputedStyle(node).position)){node.parentNode.removeChild(node)}});document.querySelectorAll("html *").forEach(function(node){var s=getComputedStyle(node);if("hidden"===s["overflow"]){node.style["overflow"]="visible"}if("hidden"===s["overflow-x"]){node.style["overflow-x"]="visible"}if("hidden"===s["overflow-y"]){node.style["overflow-y"]="visible"}});var htmlNode=document.querySelector("html");htmlNode.style["overflow"]="visible";htmlNode.style["overflow-x"]="visible";htmlNode.style["overflow-y"]="visible"}''')
 
-        # Remove fixed and sticky elements
-        page.evaluate('''() => {document.querySelectorAll("body *").forEach(function(node){if(["fixed","sticky"].includes(getComputedStyle(node).position)){node.parentNode.removeChild(node)}});document.querySelectorAll("html *").forEach(function(node){var s=getComputedStyle(node);if("hidden"===s["overflow"]){node.style["overflow"]="visible"}if("hidden"===s["overflow-x"]){node.style["overflow-x"]="visible"}if("hidden"===s["overflow-y"]){node.style["overflow-y"]="visible"}});var htmlNode=document.querySelector("html");htmlNode.style["overflow"]="visible";htmlNode.style["overflow-x"]="visible";htmlNode.style["overflow-y"]="visible"}''')
+            print("Saving PDF")
+            content = page.content()
+            soup = BeautifulSoup(content, "html.parser")
+            title = soup.title.string if soup.title else "untitled"
+            title = get_filename(title, filenum)
+            output_path = f"{title}.pdf"
 
-        print("Saving PDF")
-        content = page.content()
-        soup = BeautifulSoup(content, "html.parser")
-        title = soup.title.string if soup.title else "untitled"
-        title = get_filename(title, filenum)
-        output_path = f"{title}.pdf"
-
-        page.pdf(path=output_path, format="Letter")
-        browser.close()
-        print(f"PDF saved as {output_path}")
+            page.pdf(path=output_path, format="Letter")
+            browser.close()
+            print(f"PDF saved as {output_path}")
 
 def main():
     filename = None
