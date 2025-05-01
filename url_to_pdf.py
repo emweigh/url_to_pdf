@@ -8,12 +8,10 @@ import argparse
 
 """
 TODO:
-1. Rewrite argument handling use argparse module
-2. Add argument/flag to run in headful mode
-3. Figure out a better way to generate and format PDFs.
-4. Rewrite numeric naming so it includes actual filename, i.e. "NUM - ORIGINAL_FILENAME.pdf"
-5. ?Optional? Check if webpage has print button; if so, use it to generate PDF instead
-6. Evaluate Javascript for removing elements
+1. Figure out a better way to generate and format PDFs.
+2. Check if webpage is actually a PDF being rendered. If so, use built in option to download instead.
+3. Add flag to choose browser to run (default is Chromium but we also want WebKit and Firefox)
+3. Evaluate Javascript for removing elements
 """
 
 
@@ -38,12 +36,16 @@ def get_filename(title, filenum: str = None):
 
     return filename
 
+def check_url(url : str):
+	# Check if url already links to PDF, and if PDF, then download and save instead of print to PDF
+	return url.endswith((".PDF",".pdf"))
 
 def save_pdf(url: str, filenum: str = None, run_headful: bool = False):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=run_headful)
+        browser = p.chromium.launch(headless=run_headful, slow_mo=5000)
         page = browser.new_page()
         page.goto(url)
+        page.wait_for_load_state('load')
         print(page.title())
 
         # Remove fixed and sticky elements
