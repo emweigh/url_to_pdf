@@ -1,14 +1,16 @@
-Revisions from @emweigh:
+## Revisions from @emweigh
 
 1. Rewrote argument handling to use argparse module
 2. Added argument/flag to run in headful mode
 3. Rewrote numeric naming so that it includes actual filename, i.e. "NUM - ORIGINAL_FILENAME.pdf"
 4. Added a text file with test URLs for generating PDFs
 
-Future ToDo:
-1. Create a better PDF generator with nicer formatting.
-2. [?] Evaluate if webpage has print button; if so, use it to generate PDF instead
+## @emweigh planned to-do list:
+- [ ] Implement a PDF generator with nicer formatting.
+- [ ] [STRETCH] Evaluate if webpage has print button; if so, print document and save that as PDF
+- [ ] [STRETCH] Evaluate if URL points to PDF or non-PDF/html (e.g. .DOCX); if so, save document as is instead of generating PDF
 
+##
 
 This script will download the given urls as pdf files, using Microsoft Playwright (Chromium).
 
