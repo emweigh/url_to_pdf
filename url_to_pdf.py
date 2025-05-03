@@ -55,7 +55,7 @@ def save_pdf(url: str, filenum: str = None, run_headful: bool = False):
     global error_url_log
     error_url_log = ''
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=run_headful, slow_mo=0, downloads_path=f'{os.getcwd()}/')
+        browser = p.chromium.launch(headless=run_headful, slow_mo=0)
         context = browser.new_context()
         page = context.new_page()
         page.route("**/*.{pdf,png,jpeg,jpg}", handler=override_content_disposition_handler)
