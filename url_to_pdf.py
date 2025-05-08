@@ -51,7 +51,7 @@ def check_url(url : str):
     path=parsed_url.path
 
     # Run boolean check against file extension to make sure it's not a webpage
-    return os.path.splitext(path)[1] not in ['','.html','.php','.aspx']
+    return os.path.splitext(path)[1] not in ['','.htm','.html','.xhtml','.php','.aspx','.asp','.css','.rss','.xps','.json','.warc']
 
 def override_content_disposition_handler(route: Route, request: Request) -> None:
     # Borrowed code from https://github.com/microsoft/playwright/issues/15163
